@@ -1,0 +1,42 @@
+{
+  "_comment": "Opcional: 'context' sobrescreve o perfil e as env vars só neste job. Sem ele, vale o perfil (--profile) ou as env vars META_*.",
+  "job_type": "adsets",
+  "items": [
+    {
+      "campaign_id": "<CAMPAIGN_ID>",
+      "auto_number": true,
+      "name_template": "{num:02d} - Publico",
+      "daily_budget": 5000,
+      "optimization_goal": "OFFSITE_CONVERSIONS",
+      "billing_event": "IMPRESSIONS",
+      "bid_strategy": "LOWEST_COST_WITHOUT_CAP",
+      "targeting": {
+        "age_min": 18,
+        "age_max": 65,
+        "geo_locations": {
+          "countries": [
+            "BR"
+          ]
+        },
+        "publisher_platforms": [
+          "facebook",
+          "instagram"
+        ],
+        "facebook_positions": [
+          "feed",
+          "story"
+        ],
+        "instagram_positions": [
+          "stream",
+          "story",
+          "reels"
+        ]
+      },
+      "promoted_object": {
+        "pixel_id": "<PIXEL_ID>",
+        "custom_event_type": "PURCHASE"
+      },
+      "status": "PAUSED"
+    }
+  ]
+}

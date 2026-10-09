@@ -1,0 +1,4 @@
+{
+  "_comment": "Opcional: 'context' sobrescreve o perfil e as env vars só neste job. Sem ele, vale o perfil (--profile) ou as env vars META_*.",
+  "campaign_id": "<CAMPAIGN_ID>"
+}

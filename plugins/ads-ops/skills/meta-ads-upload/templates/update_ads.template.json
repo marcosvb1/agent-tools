@@ -1,0 +1,18 @@
+{
+  "_comment": "Opcional: 'context' sobrescreve o perfil e as env vars só neste job. Sem ele, vale o perfil (--profile) ou as env vars META_*.",
+  "url_tags": "utm_source={{site_source_name}}&utm_medium=ppc&utm_campaign={{campaign.name}}&utm_content={{ad.name}}&placement={{placement}}",
+  "items": [
+    {
+      "ad_id": "<AD_ID>",
+      "creative_name": "ad01 - update stories",
+      "feed_hash": "<FEED_IMAGE_HASH>",
+      "stories_hash": "<STORIES_IMAGE_HASH>",
+      "message": "Copy do anuncio",
+      "link": "https://example.com/oferta"
+    },
+    {
+      "ad_id": "<AD_ID>",
+      "creative_id": "<CREATIVE_ID>"
+    }
+  ]
+}

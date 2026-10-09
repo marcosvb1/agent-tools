@@ -1,0 +1,23 @@
+{
+  "_comment": "Opcional: 'context' sobrescreve o perfil e as env vars só neste job. Sem ele, vale o perfil (--profile) ou as env vars META_*.",
+  "job_type": "video_ads",
+  "url_tags": "utm_source={{site_source_name}}&utm_medium=ppc&utm_campaign={{campaign.name}}&utm_content={{ad.name}}",
+  "items": [
+    {
+      "ad_name": "ad01 - video - conceito",
+      "adset_id": "<ADSET_ID>",
+      "video_id": "<VIDEO_ID>",
+      "message": "Copy do anuncio",
+      "link": "https://example.com/oferta",
+      "status": "PAUSED"
+    },
+    {
+      "ad_name": "ad02 - video - variante",
+      "adset_id": "<ADSET_ID>",
+      "video_url": "https://example.com/criativos/ad02.mp4",
+      "message": "Copy do anuncio",
+      "link": "https://example.com/oferta",
+      "status": "PAUSED"
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "job_type": "campaigns",
+  "deep_copy": true,
+  "rename_strategy": "DEEP_RENAME",
+  "rename_suffix": " - Copy",
+  "status_option": "PAUSED",
+  "items": [
+    {
+      "id": "<CAMPAIGN_ID>"
+    }
+  ]
+}

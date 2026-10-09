@@ -46,4 +46,4 @@ Mods criados numa sessão na nuvem ficam no container e somem quando a sessão a
 
 ## Distribuição
 
-Liste cada plugin ou mod no `.claude-plugin/marketplace.json` da raiz. A instalação é `/plugin install <nome> --marketplace marcosvb1/agent-tools`.
+Liste cada plugin ou mod no `.claude-plugin/marketplace.json` da raiz. A instalação é `/plugin marketplace add marcosvb1/agent-tools` uma vez e depois `/plugin install <nome>@agent-tools`. Skills avulsas ficam em `skills/` e entram no marketplace por uma entrada com `"source": "./"`, `"strict": false` e a lista `"skills"` (veja `skills/README.md`).

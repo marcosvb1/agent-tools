@@ -1,0 +1,29 @@
+{
+  "_comment": "Cria adcreative a partir de um post existente do Instagram e publica os ads. Opcional: 'context' sobrescreve o perfil e as env vars só neste job. Sem ele, vale o perfil (--profile) ou as env vars META_*.",
+  "job_type": "existing_post_ads",
+  "status": "PAUSED",
+  "link": "https://example.com/oferta",
+  "url_tags": "utm_source={{site_source_name}}&utm_medium=ppc&utm_campaign={{campaign.name}}&utm_content={{ad.name}}",
+  "tracking_specs": [
+    {
+      "action.type": [
+        "offsite_conversion"
+      ],
+      "fb_pixel": [
+        "<PIXEL_ID>"
+      ]
+    }
+  ],
+  "items": [
+    {
+      "ad_name": "ad01 - post existente",
+      "adset_id": "<ADSET_ID>",
+      "post_id": "<IG_MEDIA_ID>"
+    },
+    {
+      "ad_name": "ad02 - post existente",
+      "adset_id": "<ADSET_ID>",
+      "post_id": "<IG_MEDIA_ID>"
+    }
+  ]
+}

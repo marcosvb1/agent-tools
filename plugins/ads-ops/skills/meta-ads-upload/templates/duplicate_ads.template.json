@@ -1,0 +1,11 @@
+{
+  "job_type": "ads",
+  "rename_strategy": "NO_RENAME",
+  "status_option": "PAUSED",
+  "adset_id": null,
+  "items": [
+    {
+      "id": "<AD_ID>"
+    }
+  ]
+}

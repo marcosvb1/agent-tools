@@ -1,0 +1,13 @@
+{
+  "job_type": "adsets",
+  "deep_copy": true,
+  "rename_strategy": "DEEP_RENAME",
+  "rename_suffix": " - Copy",
+  "status_option": "PAUSED",
+  "campaign_id": null,
+  "items": [
+    {
+      "id": "<ADSET_ID>"
+    }
+  ]
+}
