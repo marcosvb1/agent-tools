@@ -20,6 +20,23 @@
         "tiktok-ads",
         "midia-paga"
       ]
+    },
+    {
+      "name": "mise-en-place",
+      "source": "./",
+      "strict": false,
+      "description": "Mapeia uma ferramenta (contas, objetos, propriedades, IDs, payloads e regras de uso) em references verificadas para o Claude trabalhar com ela sem chutar.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "keywords": [
+        "references",
+        "mapeamento",
+        "api",
+        "steering"
+      ],
+      "skills": [
+        "./skills/mise-en-place"
+      ]
     }
   ]
 }

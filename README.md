@@ -10,11 +10,20 @@ Ele funciona como um marketplace de plugins do Claude Code.
 - `plugins/`: plugins e mods, uma pasta por plugin (veja [plugins/README.md](plugins/README.md)).
 - `skills/`: skills avulsas, uma pasta por skill (veja [skills/README.md](skills/README.md)).
 
+## Conteúdo
+
+| Nome | Tipo | O que faz |
+| --- | --- | --- |
+| `ads-ops` | plugin | Operação de Meta Ads e TikTok Ads com dry-run e criação pausada. |
+| `mise-en-place` | skill | Mapeia uma ferramenta (contas, objetos, propriedades, IDs, payloads e regras de uso) em references verificadas. |
+
 ## Instalação
 
 ```bash
 /plugin marketplace add marcosvb1/agent-tools
 /plugin install <plugin>@agent-tools
 ```
+
+Exemplo: `/plugin install mise-en-place@agent-tools`.
 
 Por projeto: `claude plugin install <plugin>@agent-tools --scope project`.
