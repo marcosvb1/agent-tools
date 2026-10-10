@@ -188,8 +188,10 @@ class MetaAdsClient:
                 "params": params or {},
             }
 
+        # Token goes in the Authorization header, never in the URL or body, so
+        # it can't leak through exception messages that echo the request URL.
         payload = dict(params or {})
-        payload["access_token"] = self.context.access_token
+        headers = {"Authorization": f"Bearer {self.context.access_token}"}
         url = f"{self.context.base_url}/{path.lstrip('/')}"
 
         last_error: str | None = None
@@ -202,10 +204,11 @@ class MetaAdsClient:
                     params=payload if is_get else None,
                     data=None if is_get else payload,
                     files=files,
+                    headers=headers,
                     timeout=self.timeout_seconds,
                 )
             except requests.RequestException as exc:
-                last_error = str(exc)
+                last_error = str(exc).replace(self.context.access_token, "***")
                 if attempt < self.max_retries:
                     time.sleep(attempt)
                     continue

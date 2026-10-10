@@ -1,10 +1,11 @@
 {
   "name": "ads-ops",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Operação de mídia paga no Meta Ads e no TikTok Ads: criar, duplicar, atualizar e auditar campanhas com dry-run e criação pausada, para qualquer conta configurada.",
   "author": {
     "name": "marcosvb1"
   },
   "repository": "https://github.com/marcosvb1/agent-tools",
+  "license": "MIT",
   "keywords": ["meta-ads", "facebook-ads", "tiktok-ads", "midia-paga", "trafego"]
 }
