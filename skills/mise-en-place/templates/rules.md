@@ -20,7 +20,7 @@
 
 ## Formats
 
-- <Amounts in <cents/micros> of the account currency.>
+- <Amounts in <minor units/micros/major units> of the account currency (<CURRENCY>, exponent <n>).>
 - <Dates in the account's time zone.>
 
 ## Account conventions

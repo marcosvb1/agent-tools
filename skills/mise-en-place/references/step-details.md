@@ -13,7 +13,8 @@ For each object relevant to the goal (template: `templates/object.md`):
 - Pull the **schema** from the metadata endpoint or tool (properties, custom fields, event types), not from samples: a sample only shows what happens to be filled in.
 - Record per property: API name, UI label, type, whether it's required or read-only, enum options with their **IDs** (pipeline statuses, stages, lists, tags), and what it means for the business when that isn't obvious.
 - Record the **relations** (lead → contact → company; campaign → ad set → ad) and how to navigate between them.
-- Read 1 to 3 real records only to confirm the shape. Don't copy personal data into the map.
+- Prefer the schema. Read a real record only if the schema leaves the shape unclear: at most 1 to 3, requesting only fields without personal data (`fields=`, `properties=`, a `SELECT` of named columns). Never read records in tools that hold special categories (health, children, biometrics, an individual's finances); those maps stay schema-only.
+- Add the optional `Personal data` column (`no`, `yes`, `sensitive`) when the user wants it: the map then doubles as a data inventory for GDPR article 30 or LGPD article 37 records.
 
 Objects outside the goal get one row in the `README.md` table, with no file of their own.
 
@@ -25,24 +26,30 @@ For each common operation (list, search, create, update, move…), keep the requ
 - Writes: don't execute them just to document them. In this order:
   1. the tool's own dry-run, sandbox or validation (`validate_only`, test mode), when it exists;
   2. a write the user already asked for in this session: record its payload;
-  3. if the tool has none of that (common in CRMs and task managers), propose **one** reversible write on a test object to the user (create a "mise-en-place test" lead and delete it right after, for example) and only do it after they say yes;
+  3. if the tool has none of that (common in CRMs and task managers), propose **one** reversible write on a test object to the user (create a "mise-en-place test" lead and delete it right after, for example) and only do it after they say yes. Before proposing it, check what the write can trigger outside the tool: automations and workflows on that object (welcome emails or WhatsApp messages), webhooks, and conversion events sent to ad platforms, which pollute campaign optimization. Use obviously fake data on `example.com`, and remember a delete may be a soft delete that stays in the audit log;
   4. otherwise, record it from the documentation and mark it `docs`.
 - A write that spends money, messages third parties or deletes real data never goes through option 3.
 - Note the errors that came up and what fixed them: it's the most valuable part of the map.
 
 ## 6. Redaction and secrets
 
-- **Never** write a token, password, API key, cookie or signed URL in the `.md` files or in `data.example.json`. Credentials appear as `$VARIABLE_NAME` or `<TOKEN>`. Prefer an environment variable or the user's secret manager. If the destination's convention already keeps credentials in a `*.local.json`, follow it only after confirming that file is outside git, and tell the user the token sits there in plain text.
-- Personal data (names, emails, phones, ID documents, addresses of leads and customers) becomes placeholders: `<NAME>`, `<EMAIL>`, `<PHONE>`, `<TAX_ID>`, `<ADDRESS>`.
-- Account, page, pipeline and field IDs are **not secrets** and are what makes the map useful. In a public or shared repo, the `.md` files use `<AD_ACCOUNT_ID>` and the real IDs live in `data.local.json`, with the same shape as `data.example.json` (check that `.gitignore` covers `*.local.json` and offer to add it). In a private vault or repo, IDs in the `README.md` tables are fine and more practical.
+- **Never** write a token, password, API key, cookie or signed URL in any map file, `data.local.json` included: synced folders, backups and shared drives leak local files. Credentials appear as `$VARIABLE_NAME` or `<TOKEN>` and live in an environment variable or a secret manager (1Password, Doppler, Vault…). If the destination already keeps credentials in a local file, don't add more, and point it out to the user.
+- If the project already separates real values another way (`.env` + `.env.example`, a secret manager), follow it instead of `data.local.json`.
+- Personal data (names, emails, phones, ID documents, addresses of leads, customers and the team's own users) becomes placeholders: `<NAME>`, `<EMAIL>`, `<PHONE>`, `<NATIONAL_ID>`, `<ADDRESS>`.
+- Account, page, pipeline and field IDs are **not secrets** and are what makes the map useful. In a public or shared repo, the `.md` files use `<AD_ACCOUNT_ID>`, accounts appear as neutral slugs (`client-a`) because a client's name can reveal a business relationship under NDA, and the real IDs and names live in `data.local.json`, with the same shape as `data.example.json` (check that `.gitignore` covers `*.local.json` and offer to add it). In a private vault or repo, IDs in the `README.md` tables are fine and more practical.
 - Run the check. `scripts/check_secrets.py` lives in the skill folder and only uses the Python standard library:
 
 ```bash
 python3 <skill-folder>/scripts/check_secrets.py [--public] <destination>/<tool>
 ```
 
-  - It looks for JWTs, bearer tokens, `*_token`/`*_secret` with a value, keys with known prefixes, hex tokens, emails, phone numbers, Brazilian CPF/CNPJ (digits-only forms only when the line has a label) and long high-entropy strings.
-  - It skips `*.local.json` and `*.local.md`, which hold the real data by convention (`--include-local` scans them too).
+(`py` or `python` on Windows.)
+
+  - Credentials: JWTs, bearer and basic auth, cookies, `*_token`/`*_secret` with a value, keys with known prefixes, webhook URLs with secrets, hex tokens and long high-entropy strings.
+  - Personal data: emails (Unicode included), phone numbers in international format or next to a phone label in many languages, payment cards (Luhn), IBANs (checksum), US SSNs, Brazilian CPF/CNPJ, and national IDs next to their label (SSN, NINO, DNI, NIE, Aadhaar, PAN, SIN, TFN, CURP, RFC…).
+  - It reads UTF-8 and UTF-16, scans every file regardless of extension, and lists the files it had to skip.
+  - It skips `*.local.*` files, which hold the real IDs by convention (`--include-local` scans them too).
+  - When `gitleaks` or `trufflehog` is installed it runs them as well (`--no-external` to skip).
   - With `--public`, it also flags real IDs (`act_…`, `gid://…`, numbers with 15+ digits). Use it when the destination is a public repo.
   - Names and addresses have no reliable pattern: re-read the samples yourself.
   - Fix everything it flags or explain the false positive to the user.

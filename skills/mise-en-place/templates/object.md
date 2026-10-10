@@ -6,11 +6,13 @@
 
 ## Properties
 
-| API name | Label | Type | Required | Read-only | Notes | Source |
-| --- | --- | --- | --- | --- | --- | --- |
-| `<name>` | <Name> | string | yes | no | | verified YYYY-MM-DD |
-| `<price>` | <Value> | integer | no | no | cents | docs |
-| `<custom_field_123>` | <Lead source> | enum | no | no | options below | verified YYYY-MM-DD |
+| API name | Label | Type | Required | Read-only | Personal data | Notes | Source |
+| --- | --- | --- | --- | --- | --- | --- | --- |
+| `<name>` | <Name> | string | yes | no | yes | | verified:YYYY-MM-DD |
+| `<price>` | <Value> | integer | no | no | no | minor units | docs |
+| `<custom_field_123>` | <Lead source> | enum | no | no | no | options below | verified:YYYY-MM-DD |
+
+<The `Personal data` column (`no`, `yes`, `sensitive`) is optional; drop it if the user doesn't need a data inventory.>
 
 ## Enum options
 

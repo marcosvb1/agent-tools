@@ -9,8 +9,8 @@
     "<slug>": {
       "account_id": "<ACCOUNT_ID>",
       "name": "",
-      "currency": "USD",
-      "timezone": "America/New_York",
+      "currency": "<CURRENCY>",
+      "timezone": "<IANA_TIMEZONE>",
       "pipelines": {
         "<pipeline_id>": {
           "name": "",
@@ -27,9 +27,10 @@
             "<enum_id>": "<label>"
           }
         }
-      }
+      },
+      "currency_exponent": "<0, 2 or 3>"
     }
   },
   "_validated_at": "YYYY-MM-DD",
-  "_notes": "Copy to data.local.json (outside git) and fill in the real IDs. Never put the token here; it lives in the environment variable named in auth.env_var."
+  "_notes": "Copy to data.local.json (outside git) and fill in the real IDs. No credentials here or in data.local.json: the token lives in the environment variable named in auth.env_var or in a secret manager."
 }

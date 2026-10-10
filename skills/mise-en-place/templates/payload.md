@@ -1,6 +1,6 @@
 # <Operation> (<Tool>)
 
-> <verified YYYY-MM-DD | docs | inferred>. Account: `<account-a>`.
+> <verified:YYYY-MM-DD | docs | inferred>. Account: `<account-a>`.
 
 ## When to use
 

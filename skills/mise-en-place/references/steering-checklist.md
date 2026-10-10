@@ -20,7 +20,7 @@ Checklist for `rules.md`. Go through each item and record only what applies to t
 
 ## Formats that mislead
 
-- Money: unit (cents, micros) and the account's currency.
+- Money: the unit the API expects (minor units, micros, or major units) and the account currency's exponent. Minor units are not always cents: zero-decimal currencies such as JPY, KRW, CLP and VND have no subunit, and some have three decimals (KWD, BHD). A wrong exponent multiplies a budget by 100 or 1000.
 - Dates: account time zone versus UTC, format (ISO, epoch seconds or milliseconds).
 - IDs: string or number, prefixes (`act_`, `gid://`), different IDs between test and production.
 - Enums: accepted values and the difference between the label shown and the API value.

@@ -6,7 +6,7 @@ How to discover accounts, schema and payloads for each access route, and where c
 
 ### MCP connector
 
-1. `ToolSearch` with the tool's name to load its tools (where there is no `ToolSearch`, look at the session's tool list). Read each tool's description: it usually lists the objects it covers.
+1. Look through the session's available tools (in Claude Code, `ToolSearch` with the tool's name loads deferred ones). Read each tool's description: it usually lists the objects it covers.
 2. Look for metadata tools before data tools: names with `schema`, `properties`, `fields`, `describe`, `get_*_types`, `list_*`, `discover`, `tool_guidance`.
 3. Record in the map's `README.md` the exact name of the tool used for each operation (e.g. "create ad → `ads_create_ad`"). Tool names differ between connectors for the same product; note which connector.
 4. Note what the connector does **not** cover and would need the API directly.
@@ -39,7 +39,7 @@ Use Context7 (`resolve-library-id` and `query-docs`) or the official documentati
 
 | Tool | Accounts | Schema / metadata | Notes |
 | --- | --- | --- | --- |
-| Meta Ads (Graph API) | `GET /me/adaccounts`, `GET /me/accounts` (pages) | `GET /<id>?metadata=1`; fields per object in the Marketing API reference | Account IDs carry the `act_` prefix. Budgets in the account currency's minor unit (cents). Creatives can't change after creation. |
+| Meta Ads (Graph API) | `GET /me/adaccounts`, `GET /me/accounts` (pages) | `GET /<id>?metadata=1`; fields per object in the Marketing API reference | Account IDs carry the `act_` prefix. Budgets in the account currency's minor unit, which depends on the currency's exponent (zero-decimal currencies like JPY have no subunit). Creatives can't change after creation. |
 | TikTok Ads (Business API) | `GET /oauth2/advertiser/get/` | Field reference per endpoint (`/campaign/get/`, `/adgroup/get/`, `/ad/get/`) | `advertiser_id` required on almost every call. Time zone and currency belong to the account. |
 | Google Ads | MCC and child accounts (`customers:listAccessibleCustomers`) | GAQL `SELECT ... FROM` with `GoogleAdsFieldService` | `login-customer-id` sets the MCC; IDs without dashes; money in micros. |
 | HubSpot | `GET /account-info/v3/details` | `GET /crm/v3/properties/{objectType}`, `GET /crm/v3/schemas`, pipelines at `GET /crm/v3/pipelines/{objectType}` | A property has a `name` (API) and a `label`. Pipeline stages have their own IDs. |
@@ -49,7 +49,7 @@ Use Context7 (`resolve-library-id` and `query-docs`) or the official documentati
 | Notion | `GET /users/me`, `POST /search` | `GET /data_sources/{id}` on recent API versions (`GET /databases/{id}` on older ones): properties and select options | Select option and property IDs are stable; names are not. |
 | Airtable | `GET /v0/meta/bases` | `GET /v0/meta/bases/{baseId}/tables` (fields and choices) | Field IDs (`fld…`) survive renames; names don't. |
 | Shopify (Admin GraphQL) | the token's shop | GraphQL introspection; metafield definitions | IDs are GIDs (`gid://shopify/Product/...`). |
-| Stripe | the token's account; `GET /v1/account` | API reference; `expand[]` for relations | Amounts in minor units; test and live modes have different IDs. |
+| Stripe | the token's account; `GET /v1/account` | API reference; `expand[]` for relations | Amounts in the currency's smallest unit (cents for USD, whole yen for JPY); test and live modes have different IDs. |
 | WhatsApp Cloud API | `GET /{business_id}/owned_whatsapp_business_accounts` | templates at `GET /{waba_id}/message_templates` | Messages outside the 24-hour window need an approved template. |
 | Slack | `auth.test` | `conversations.list`, `users.list` | API calls use channel and user IDs, not names. |
 | n8n | instance and project | `GET /api/v1/workflows`; credentials by the name and type seen in workflow nodes (the public API lists little about credentials) | Record workflow and credential IDs, never credential contents. |
