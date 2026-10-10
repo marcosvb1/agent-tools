@@ -8,7 +8,7 @@ Como descobrir contas, schema e payloads por rota de acesso, e onde cada ferrame
 
 1. `ToolSearch` com o nome da ferramenta para carregar as tools (onde não houver `ToolSearch`, olhe a lista de tools da sessão). Leia a descrição de cada uma: ela costuma listar os objetos cobertos.
 2. Procure tools de metadados antes das de dados: nomes com `schema`, `properties`, `fields`, `describe`, `get_*_types`, `list_*`, `discover`, `tool_guidance`.
-3. Registre no `MAP.md` o nome exato de cada tool usada por operação (ex.: "criar anúncio → `ads_create_ad`"). Nomes de tool mudam entre conectores da mesma ferramenta; anote qual conector.
+3. Registre no `README.md` do mapa o nome exato de cada tool usada por operação (ex.: "criar anúncio → `ads_create_ad`"). Nomes de tool mudam entre conectores da mesma ferramenta; anote qual conector.
 4. Anote o que o conector **não** cobre e que exigiria API direta.
 
 ### CLI
@@ -33,7 +33,7 @@ Como descobrir contas, schema e payloads por rota de acesso, e onde cada ferrame
 
 ### Só documentação
 
-Use Context7 (`resolve-library-id` e `query-docs`) ou a documentação oficial. Marque tudo como `docs` e liste no fim do `MAP.md` o que precisa ser verificado quando houver acesso.
+Use Context7 (`resolve-library-id` e `query-docs`) ou a documentação oficial. Marque tudo como `docs` e liste no fim do `README.md` do mapa o que precisa ser verificado quando houver acesso.
 
 ## Onde ficam os metadados em ferramentas comuns
 

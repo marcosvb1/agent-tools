@@ -1,0 +1,27 @@
+{
+  "base_url": "https://api.<ferramenta>.com/v1",
+  "auth": {
+    "env_var": "<FERRAMENTA>_TOKEN",
+    "header": "Authorization: Bearer $<FERRAMENTA>_TOKEN"
+  },
+  "default_account": "<slug>",
+  "accounts": {
+    "<slug>": {
+      "account_id": "<ACCOUNT_ID>",
+      "name": "",
+      "currency": "BRL",
+      "timezone": "America/Sao_Paulo",
+      "pipelines": {
+        "<pipeline_id>": {
+          "name": "",
+          "stages": { "<stage_id>": "<nome do estágio>" }
+        }
+      },
+      "custom_fields": {
+        "<field_id>": { "name": "", "type": "enum", "options": { "<enum_id>": "<rótulo>" } }
+      }
+    }
+  },
+  "_validated_at": "AAAA-MM-DD",
+  "_notes": "Copie para data.local.json (fora do git) e preencha com os IDs reais. Nunca coloque o token aqui; ele fica na variável de ambiente indicada em auth.env_var."
+}

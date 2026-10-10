@@ -4,7 +4,7 @@
 
 ## Antes de agir
 
-- Leia [MAP.md](MAP.md) e confirme a conta com o usuário quando houver mais de uma.
+- Leia [README.md](README.md) e confirme a conta com o usuário quando houver mais de uma.
 - <Outra pré-condição.>
 
 ## Segurança

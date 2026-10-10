@@ -1,6 +1,8 @@
-# <Ferramenta>: mise en place
+# <Ferramenta>: <o que se faz com ela>
 
-> Mapa para trabalhar com <Ferramenta>. Leia antes de operar. Regras em [rules.md](rules.md) (ferramenta pequena: troque o link por uma seção `## Regras` neste arquivo).
+Use quando: <situações em que este mapa deve ser lido, nas palavras do usuário (ex.: "mover lead de etapa", "subir anúncio na conta X")>. Skill operacional: <`.claude/skills/<ferramenta>-ops/`, se houver>.
+
+> Leia antes de operar. Regras em [rules.md](rules.md) (ferramenta pequena: troque o link por uma seção `## Regras` neste arquivo). IDs e config em `data.local.json` (forma em [data.example.json](data.example.json)).
 > Atualizado em AAAA-MM-DD. Origem dos fatos: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
 
 ## Para que serve
@@ -22,7 +24,7 @@
 | --- | --- | --- | --- | --- |
 | <conta-a> | `<ACCOUNT_ID>` | <para que serve> | <BRL / America/Sao_Paulo> | sim |
 
-<Se o mapa morar num repo público, troque os IDs por placeholders e aponte para `MAP.local.md`, ignorado pelo git.>
+<Em repo público ou compartilhado, troque os IDs por placeholders; os reais ficam em `data.local.json`, fora do git.>
 
 ## Objetos
 

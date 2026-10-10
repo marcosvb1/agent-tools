@@ -11,19 +11,23 @@ O mapa vale pelo que foi **verificado**. Cada fato registra de onde veio (chamad
 
 ## Resultado
 
-Uma pasta por ferramenta:
+Uma pasta por ferramenta, dentro da pasta de references do usuário:
 
 ```
 <destino>/<ferramenta>/
-  MAP.md              # índice: acesso, contas, objetos, operações, links para o resto
+  README.md           # o mapa: "Use quando", acesso, contas, objetos, operações, links para o resto
   rules.md            # steering: regras, limites, armadilhas, o que pede confirmação
   objects/<objeto>.md # propriedades, tipos, enums, IDs, relações
   payloads/<op>.md    # request e response verificados de cada operação comum
+  data.example.json   # forma dos IDs e da config, com placeholders e _validated_at
+  data.local.json     # os IDs reais nessa forma; fica fora do git
 ```
 
-Ferramenta pequena (um objeto, duas operações) cabe toda no `MAP.md`: as regras viram uma seção `## Regras` nele e o link para `rules.md` sai. Não crie arquivos vazios.
+Ferramenta pequena (um objeto, duas operações) cabe toda no `README.md`: as regras viram uma seção `## Regras` nele e o link para `rules.md` sai. Assuntos à parte que crescem (uma armadilha longa, um caso específico) viram arquivos soltos na pasta, como `gotcha-<assunto>.md`, linkados do `README.md`. Não crie arquivos vazios.
 
-Modelos em `templates/`: `MAP.md` (passos 2 e 3), `object.md` (passo 4), `payload.md` (passo 5) e `rules.md` (passo 7).
+Se o destino já tiver pastas de outras ferramentas, **siga a convenção que estiver lá** (nomes de arquivo, seções, onde ficam os IDs) em vez deste layout: o mapa novo deve parecer irmão dos que já existem.
+
+Modelos em `templates/`: `README.md` (passos 2 e 3), `object.md` (passo 4), `payload.md` (passo 5), `rules.md` (passo 7) e `data.example.json` (passo 6).
 
 ## Fluxo
 
@@ -35,13 +39,13 @@ Pergunte (em uma mensagem só, com defaults sugeridos):
 - **Objetivo**: para que o mapa vai servir (ex.: "subir anúncios", "mover leads no funil"). Isso decide quais objetos e operações detalhar; o resto entra só listado.
 - **Destino**: onde gravar. Ordem de preferência:
   1. a pasta `references/` de uma skill da ferramenta, se ela existir ou for ser criada;
-  2. a pasta onde o vault ou o projeto do usuário já guarda references (procure por `references/`, `refs/`, `docs/tools/` antes de perguntar);
+  2. a pasta onde o vault ou o projeto do usuário já guarda references, uma subpasta por ferramenta (procure por `docs/references/`, `references/`, `refs/`, `docs/tools/` antes de perguntar);
   3. `./.claude/mise-en-place/<ferramenta>/` no projeto atual.
 - **Onde o mapa vai morar**: repositório público, privado ou só local. Isso decide o nível de redação (passo 6). Tente descobrir antes de perguntar: se o destino estiver num repo git, veja o remote e a visibilidade (`git remote -v`, `gh repo view --json visibility`).
 
 ### 2. Rota de acesso
 
-Descubra como a sessão fala com a ferramenta, nesta ordem, e registre a escolhida no `MAP.md`:
+Descubra como a sessão fala com a ferramenta, nesta ordem, e registre a escolhida no `README.md`:
 
 1. **Conector MCP** já na sessão (procure com `ToolSearch` pelo nome da ferramenta, ou confira a lista de tools e conectores da sessão onde `ToolSearch` não existir). Preferido: não precisa de token.
 2. **CLI** instalada e logada (`gh`, `gcloud`, `stripe`, `supabase`…).
@@ -63,7 +67,7 @@ Para cada objeto relevante ao objetivo:
 - Registre as **relações** (lead → contato → empresa; campanha → adset → anúncio) e como se navega entre elas.
 - Leia 1 a 3 registros reais só para confirmar o formato. Não copie dados pessoais para o mapa.
 
-Objetos fora do objetivo entram como uma linha na tabela do `MAP.md`, sem arquivo próprio.
+Objetos fora do objetivo entram como uma linha na tabela do `README.md`, sem arquivo próprio.
 
 ### 5. Payloads
 
@@ -75,9 +79,9 @@ Para cada operação comum (listar, buscar, criar, atualizar, mover…), guarde 
 
 ### 6. Redação e segredos
 
-- **Nunca** grave token, senha, API key, cookie ou URL assinada. Credencial aparece como `$NOME_DA_VARIAVEL` ou `<TOKEN>`.
+- **Nunca** grave token, senha, API key, cookie ou URL assinada nos arquivos `.md` nem no `data.example.json`. Credencial aparece como `$NOME_DA_VARIAVEL` ou `<TOKEN>`. Prefira variável de ambiente ou o cofre do usuário. Se a convenção do destino já guarda credenciais num `*.local.json`, siga-a só depois de confirmar que esse arquivo está fora do git, e avise o usuário que o token fica em texto claro ali.
 - Dados pessoais (nome, e-mail, telefone de leads e clientes) viram placeholders: `<EMAIL>`, `<NOME>`, `<TELEFONE>`.
-- IDs de conta, página, funil e campo **não são segredo** e são o que torna o mapa útil, mas só vão para um repositório **público** se o usuário disser que pode. Em repo público, use `<AD_ACCOUNT_ID>` e deixe os IDs reais num `MAP.local.md` ao lado, ignorado pelo git (confira se o `.gitignore` cobre `*.local.md` e ofereça adicionar), referenciado no `MAP.md`.
+- IDs de conta, página, funil e campo **não são segredo** e são o que torna o mapa útil, mas só vão para um repositório **público** se o usuário disser que pode. Em repo público ou compartilhado, os `.md` usam `<AD_ACCOUNT_ID>` e os IDs reais ficam no `data.local.json`, com a mesma forma do `data.example.json` (confira se o `.gitignore` cobre `*.local.json` e ofereça adicionar). Em vault ou repo privado, IDs na tabela do `README.md` são aceitáveis e mais práticos.
 - Antes de entregar, rode a checagem (`scripts/check_secrets.py` fica na pasta desta skill; só usa a biblioteca padrão do Python):
 
 ```bash
@@ -96,8 +100,8 @@ Escreva as regras que uma sessão futura precisa seguir para não errar. Use `re
 
 O mapa só ajuda se for lido. Ofereça, conforme o caso:
 
-- acrescentar ao `SKILL.md` da skill da ferramenta uma linha "antes de operar, leia `references/<ferramenta>/MAP.md`";
-- acrescentar ao `CLAUDE.md` do projeto ou ao índice do vault um link para o mapa;
+- acrescentar ao `SKILL.md` da skill da ferramenta uma linha "antes de operar, leia `<destino>/<ferramenta>/README.md`";
+- acrescentar uma linha ao índice da pasta de references (o `README.md` dela, se tiver tabela de docs), ao registro de ferramentas conectadas (ex.: `connections.md`) ou ao `CLAUDE.md` do projeto;
 - se não existir skill da ferramenta e o uso for recorrente, sugerir criar uma (com `skill-creator`) que use o mapa como reference.
 
 Feche com um resumo curto: rota de acesso, contas mapeadas, objetos e operações cobertos, o que ficou como `docs` (não verificado) e o que a checagem de segredos encontrou.
@@ -106,15 +110,15 @@ Feche com um resumo curto: rota de acesso, contas mapeadas, objetos e operaçõe
 
 Quando o usuário pedir para atualizar ou auditar:
 
-1. Leia o `MAP.md` e veja a data de cada linha na coluna `Origem` (e a data do cabeçalho de cada arquivo).
+1. Leia o `README.md` do mapa e veja a data de cada linha na coluna `Origem` (e a data do cabeçalho de cada arquivo).
 2. Repita os passos 3 a 5 só em leitura e compare: contas novas ou removidas, propriedades e opções de enum que mudaram, IDs que não existem mais, linhas `docs` que agora dá para verificar.
 3. Mostre as diferenças ao usuário antes de reescrever.
 4. Atualize o `rules.md` com o que mudou (limites, enums, erros novos) e rode a checagem de segredos de novo (passos 6 e 7).
-5. Atualize as datas e registre a mudança na seção "Histórico" do `MAP.md`.
+5. Atualize as datas (inclusive o `_validated_at` do `data.example.json`) e registre a mudança na seção "Histórico" do `README.md`.
 
 ## Princípios
 
-- **Curto e navegável.** O `MAP.md` é lido inteiro em toda sessão; mantenha-o abaixo de ~200 linhas e mande o detalhe para `objects/` e `payloads/`.
+- **Curto e navegável.** O `README.md` do mapa é lido inteiro em toda sessão; mantenha-o abaixo de ~200 linhas e mande o detalhe para `objects/` e `payloads/`.
 - **Verificado vence completo.** Melhor dez propriedades confirmadas que duzentas copiadas da documentação. Marque a origem: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
 - **IDs em tabela.** Quem opera precisa achar "ID do estágio Qualificado" em um olhar.
 - **Só leitura por padrão.** Mapear não é operar.
