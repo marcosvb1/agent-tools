@@ -1,10 +1,17 @@
 #!/usr/bin/env python3
 """Procura segredos e dados pessoais num mapa gerado pela skill mise-en-place.
 
-Uso: python3 check_secrets.py <pasta-ou-arquivo> [...]
+Uso: python3 check_secrets.py [--public] [--include-local] <pasta-ou-arquivo> [...]
+     python3 check_secrets.py --self-test
+
+--public         também acusa IDs reais (act_123..., gid://..., números de 15+
+                 dígitos) nos arquivos que vão para um repo público.
+--include-local  varre também *.local.json e *.local.md, que por convenção
+                 guardam os IDs reais e ficam fora do git (pulados por padrão).
 
 Sai com código 1 se encontrar algo. Placeholders como <TOKEN>, $VAR e
-exemplos com "example" são ignorados.
+exemplos com "example" são ignorados. Nomes e endereços não têm padrão
+confiável: revise-os à mão.
 """
 
 import math
@@ -32,14 +39,30 @@ PATTERNS = [
     ("Credential in URL", re.compile(r"https?://[^\s/:@]+:[^\s/@]+@")),
     ("Token in query string", re.compile(r"[?&](?:access_token|api_key|apikey|token|key|secret)=(?![<$\{])[^\s&\"']{12,}", re.I)),
     ("Secret assignment", re.compile(
-        r"(?<![A-Za-z_])(?<!page_)(?<!next_)(?<!continuation_)(?:token|secret|password|passwd|api[_-]?key|client[_-]?secret)\"?\s*[:=]\s*\"?(?![<$\{])([A-Za-z0-9._~+/=-]{16,})",
+        r"(?<![A-Za-z0-9_-])(?![A-Za-z_-]*(?:next|page|continuation|sync|cursor)[_-])(?:[A-Za-z]+[_-])*"
+        r"(?:token|secret|password|passwd|api[_-]?key|client[_-]?secret)[\"']?\s*[:=]\s*[\"']?(?![<$\{])([A-Za-z0-9._~+/=-]{16,})",
         re.I,
     )),
     ("E-mail", re.compile(r"\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}\b")),
     ("Phone number", re.compile(r"(?<![\w-])\+\d{1,3}[\s-]?\(?\d{2,3}\)?[\s-]?\d{4,5}[\s-]?\d{4}\b")),
     ("Phone number (BR)", re.compile(r"(?<![\w+])\(\d{2}\)\s?9?\d{4}-?\d{4}\b")),
+    ("Phone number (BR)", re.compile(r"(?<![\w+(])\d{2}\s9\d{4}-?\d{4}\b")),
     ("CPF", re.compile(r"\b\d{3}\.\d{3}\.\d{3}-\d{2}\b")),
     ("CNPJ", re.compile(r"\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b")),
+]
+
+# Só dígitos colidem com IDs numéricos; por isso só contam com um rótulo na linha.
+LABELED = [
+    ("Phone number (digits)", re.compile(r"(?:tel|fone|phone|celular|whats|contato)", re.I),
+     re.compile(r"\b(?:55)?\d{2}9?\d{8}\b")),
+    ("CPF (digits)", re.compile(r"\bcpf\b", re.I), re.compile(r"\b\d{11}\b")),
+    ("CNPJ (digits)", re.compile(r"\bcnpj\b", re.I), re.compile(r"\b\d{14}\b")),
+]
+
+PUBLIC_IDS = [
+    ("Real ID (act_)", re.compile(r"\bact_\d{6,}")),
+    ("Real ID (gid://)", re.compile(r"gid://[A-Za-z]+/[A-Za-z]+/\d+")),
+    ("Real ID (15+ digits)", re.compile(r"(?<![\w.])\d{15,}(?![\w.])")),
 ]
 
 ALLOWED_EMAIL = re.compile(r"(?:example\.(?:com|org|net)|users\.noreply\.github\.com|noreply@)", re.I)
@@ -54,8 +77,14 @@ def entropy(s: str) -> float:
     return -sum(n / len(s) * math.log2(n / len(s)) for n in counts.values())
 
 
-def scan_line(line: str):
+def scan_line(line: str, public: bool = False):
     hits = []
+    for label, context, pattern in LABELED:
+        if context.search(line):
+            hits += [(label, m.group(0)) for m in pattern.finditer(line)]
+    if public:
+        for label, pattern in PUBLIC_IDS:
+            hits += [(label, m.group(0)) for m in pattern.finditer(line)]
     for label, pattern in PATTERNS:
         for m in pattern.finditer(line):
             text = m.group(0)
@@ -83,33 +112,82 @@ def scan_line(line: str):
     return hits
 
 
-def iter_files(paths):
+def is_local(f: Path) -> bool:
+    return ".local." in f.name
+
+
+def iter_files(paths, include_local=False):
     for p in paths:
         path = Path(p)
         if path.is_file():
             yield path
         elif path.is_dir():
             for f in sorted(path.rglob("*")):
-                if f.is_file() and f.suffix.lower() in TEXT_SUFFIXES and ".git" not in f.parts:
-                    yield f
+                if not f.is_file() or ".git" in f.parts or f.suffix.lower() not in TEXT_SUFFIXES:
+                    continue
+                if is_local(f) and not include_local:
+                    continue
+                yield f
 
 
 def redact(text: str) -> str:
     return text if len(text) <= 12 else f"{text[:6]}…{text[-4:]}"
 
 
+SELF_TEST = [
+    ('"access_token": "aB3dE5fG7hJ9kL1mN3pQ5r"', True),
+    ("auth_token: aB3dE5fG7hJ9kL1mN3pQ5r", True),
+    ("refresh_token=aB3dE5fG7hJ9kL1mN3pQ5r", True),
+    ("token: abcdefghijklmnop1234", True),
+    ("Authorization: Bearer abcDEF1234567890abcdefXYZ987", True),
+    ("Telefone: 11 98765-4321", True),
+    ("whatsapp 5511987654321", True),
+    ("tel (11) 98765-4321", True),
+    ("CPF 12345678901", True),
+    ("cpf 123.456.789-09", True),
+    ("joao.silva@gmail.com", True),
+    ("Access-Token: 9f8e7d6c5b4a39281706f5e4d3c2b1a0aabbccdd", True),
+    ("Authorization: Bearer $KOMMO_TOKEN", False),
+    ('"access_token": "<TOKEN>"', False),
+    ('"next_page_token": "Xk29fjaLq0Pz81mVn3TyBw7Rq2Ls"', False),
+    ('"image_hash": "9f8e7d6c5b4a39281706f5e4d3c2b1a0"', False),
+    ("id 3fa85f64-5717-4562-b3fc-2c963f66afa6", False),
+    ("pipeline_id 12345678901", False),
+    ("dev@example.com", False),
+]
+
+
+def self_test():
+    failed = 0
+    for line, expected in SELF_TEST:
+        got = bool(scan_line(line))
+        if got != expected:
+            failed += 1
+            print(f"FALHOU: esperado {'alerta' if expected else 'limpo'}: {line}")
+    if not scan_line("ad account act_1234567890", public=True):
+        failed += 1
+        print("FALHOU: --public deveria acusar act_1234567890")
+    print("self-test ok" if not failed else f"{failed} caso(s) falharam")
+    return 1 if failed else 0
+
+
 def main(argv):
+    if "--self-test" in argv:
+        return self_test()
+    public = "--public" in argv
+    include_local = "--include-local" in argv
+    argv = [a for a in argv if not a.startswith("--")]
     if not argv:
         print(__doc__.strip())
         return 2
     found = 0
-    for f in iter_files(argv):
+    for f in iter_files(argv, include_local):
         try:
             lines = f.read_text(encoding="utf-8").splitlines()
         except (UnicodeDecodeError, OSError):
             continue
         for n, line in enumerate(lines, 1):
-            for label, text in scan_line(line):
+            for label, text in scan_line(line, public):
                 found += 1
                 print(f"{f}:{n}: {label}: {redact(text)}")
     if found:

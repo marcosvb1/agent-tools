@@ -1,9 +1,16 @@
+---
+tool: <ferramenta>
+route: <mcp:<conector> | cli:<cli> | api | docs>
+default_account: <slug da conta padrão, igual à chave em data.local.json>
+validated_at: AAAA-MM-DD
+---
+
 # <Ferramenta>: <o que se faz com ela>
 
 Use quando: <situações em que este mapa deve ser lido, nas palavras do usuário (ex.: "mover lead de etapa", "subir anúncio na conta X")>. Skill operacional: <`.claude/skills/<ferramenta>-ops/`, se houver>.
 
 > Leia antes de operar. Regras em [rules.md](rules.md) (ferramenta pequena: troque o link por uma seção `## Regras` neste arquivo). IDs e config em `data.local.json` (forma em [data.example.json](data.example.json)).
-> Atualizado em AAAA-MM-DD. Origem dos fatos: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
+> Origem dos fatos: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
 
 ## Para que serve
 
