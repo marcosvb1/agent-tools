@@ -1,59 +1,62 @@
 # Discovery playbook
 
-Como descobrir contas, schema e payloads por rota de acesso, e onde cada ferramenta comum expõe seus metadados. Os endpoints abaixo são pontos de partida conhecidos; confirme na documentação atual (Context7 ou docs oficiais) antes de registrar como fato, porque versões de API mudam.
+How to discover accounts, schema and payloads for each access route, and where common tools expose their metadata. The endpoints below are known starting points; confirm them in the current documentation (Context7 or official docs) before recording them as fact, because API versions change.
 
-## Por rota de acesso
+## By access route
 
-### Conector MCP
+### MCP connector
 
-1. `ToolSearch` com o nome da ferramenta para carregar as tools (onde não houver `ToolSearch`, olhe a lista de tools da sessão). Leia a descrição de cada uma: ela costuma listar os objetos cobertos.
-2. Procure tools de metadados antes das de dados: nomes com `schema`, `properties`, `fields`, `describe`, `get_*_types`, `list_*`, `discover`, `tool_guidance`.
-3. Registre no `README.md` do mapa o nome exato de cada tool usada por operação (ex.: "criar anúncio → `ads_create_ad`"). Nomes de tool mudam entre conectores da mesma ferramenta; anote qual conector.
-4. Anote o que o conector **não** cobre e que exigiria API direta.
+1. `ToolSearch` with the tool's name to load its tools (where there is no `ToolSearch`, look at the session's tool list). Read each tool's description: it usually lists the objects it covers.
+2. Look for metadata tools before data tools: names with `schema`, `properties`, `fields`, `describe`, `get_*_types`, `list_*`, `discover`, `tool_guidance`.
+3. Record in the map's `README.md` the exact name of the tool used for each operation (e.g. "create ad → `ads_create_ad`"). Tool names differ between connectors for the same product; note which connector.
+4. Note what the connector does **not** cover and would need the API directly.
 
 ### CLI
 
-1. `<cli> --help` e `<cli> <recurso> --help` para listar recursos e flags.
-2. Prefira saída estruturada (`--json`, `-o json`, `--format json`) e registre a flag.
-3. Registre como a CLI escolhe conta/projeto (`--project`, perfil, variável de ambiente) e como ver o contexto atual (`gcloud config list`, `gh auth status`).
+1. `<cli> --help` and `<cli> <resource> --help` to list resources and flags.
+2. Prefer structured output (`--json`, `-o json`, `--format json`) and record the flag.
+3. Record how the CLI picks the account or project (`--project`, profile, environment variable) and how to see the current context (`gcloud config list`, `gh auth status`).
 
-### API HTTP
+### HTTP API
 
-1. Descubra a URL base e a versão. Registre a versão usada.
-2. Registre autenticação só pelo nome da variável: `Authorization: Bearer $FERRAMENTA_TOKEN`.
-3. Procure, nesta ordem: spec OpenAPI/GraphQL introspection, endpoint de metadados/campos, endpoint "me"/"account" para descobrir contas, e só então listagens de registros com `limit` pequeno.
-4. Registre paginação (cursor, offset, `next`), limite de taxa (cabeçalhos `X-RateLimit-*`, `Retry-After`) e formato de erro.
+1. Find the base URL and version. Record the version used.
+2. Record authentication by variable name only: `Authorization: Bearer $TOOL_TOKEN`.
+3. Look, in this order, for: an OpenAPI spec or GraphQL introspection, a metadata/fields endpoint, a "me"/"account" endpoint to discover accounts, and only then record listings with a small `limit`.
+4. Record pagination (cursor, offset, `next`), rate limits (`X-RateLimit-*`, `Retry-After` headers) and the error format.
 
-### Banco de dados
+### Database
 
-1. Liste schemas e tabelas (`information_schema`, `\d` no psql).
-2. Para tabelas do objetivo: colunas, tipos, nulos, chaves, índices e FKs.
-3. Registre enums e tabelas de domínio (status, tipos) com seus valores.
-4. Use `LIMIT` em toda amostra e nunca copie linhas com dados pessoais.
+1. List schemas and tables (`information_schema`, `\d` in psql).
+2. For the tables in scope: columns, types, nullability, keys, indexes and foreign keys.
+3. Record enums and lookup tables (statuses, types) with their values.
+4. Use `LIMIT` on every sample and never copy rows with personal data.
 
-### Só documentação
+### Documentation only
 
-Use Context7 (`resolve-library-id` e `query-docs`) ou a documentação oficial. Marque tudo como `docs` e liste no fim do `README.md` do mapa o que precisa ser verificado quando houver acesso.
+Use Context7 (`resolve-library-id` and `query-docs`) or the official documentation. Mark everything as `docs` and list at the end of the map's `README.md` what must be verified once there is access.
 
-## Onde ficam os metadados em ferramentas comuns
+## Where common tools keep their metadata
 
-| Ferramenta | Contas | Schema / metadados | Observações |
+| Tool | Accounts | Schema / metadata | Notes |
 | --- | --- | --- | --- |
-| Meta Ads (Graph API) | `GET /me/adaccounts`, `GET /me/accounts` (páginas) | `GET /<id>?metadata=1`; campos por objeto na referência da Marketing API | IDs de conta com prefixo `act_`. Orçamento em centavos da moeda da conta. Criativo não muda depois de criado. |
-| TikTok Ads (Business API) | `GET /oauth2/advertiser/get/` | Referência de campos por endpoint (`/campaign/get/`, `/adgroup/get/`, `/ad/get/`) | `advertiser_id` obrigatório em quase toda chamada. Fuso e moeda são da conta. |
-| HubSpot | `GET /account-info/v3/details` | `GET /crm/v3/properties/{objectType}`, `GET /crm/v3/schemas`, pipelines em `GET /crm/v3/pipelines/{objectType}` | Propriedade tem `name` (API) e `label`. Estágios de pipeline têm IDs próprios. |
-| Kommo / amoCRM | subdomínio da conta; `GET /api/v4/account` | `GET /api/v4/leads/pipelines` (funis e status), `GET /api/v4/{entity}/custom_fields` | Status de funil têm ID numérico; campos customizados têm `field_id` e `enum_id` por opção. |
-| ClickUp | `GET /team` (workspaces) | `GET /space/{id}`, `GET /list/{id}/field` (campos customizados), statuses por lista ou space | Status e campos podem variar por lista. |
-| Notion | `GET /users/me`, `POST /search` | `GET /data_sources/{id}` nas versões recentes da API (`GET /databases/{id}` nas antigas): propriedades e opções de select | IDs de opção de select e de propriedade são estáveis; nomes não. |
-| Shopify (Admin GraphQL) | loja do token | introspection GraphQL; metafield definitions | IDs são GIDs (`gid://shopify/Product/...`). |
-| Stripe | conta do token; `GET /v1/account` | referência da API; `expand[]` para relações | Valores em centavos; modo test e live têm IDs diferentes. |
-| WhatsApp Cloud API | `GET /{business_id}/owned_whatsapp_business_accounts` | templates em `GET /{waba_id}/message_templates` | Mensagem fora da janela de 24h exige template aprovado. |
-| n8n | instância e projeto | `GET /api/v1/workflows`; credenciais pelo nome e tipo vistos nos nós do workflow (a API pública lista pouco de credenciais) | Registre IDs de workflow e de credencial, nunca o conteúdo da credencial. |
-| Google Ads | MCC e contas filhas (`customers:listAccessibleCustomers`) | GAQL `SELECT ... FROM` com `GoogleAdsFieldService` | `login-customer-id` define o MCC; IDs sem hífen. |
-| Postgres / Supabase | projeto ou database | `information_schema`, `pg_enum` | RLS muda o que cada chave enxerga; registre qual papel foi usado. |
+| Meta Ads (Graph API) | `GET /me/adaccounts`, `GET /me/accounts` (pages) | `GET /<id>?metadata=1`; fields per object in the Marketing API reference | Account IDs carry the `act_` prefix. Budgets in the account currency's minor unit (cents). Creatives can't change after creation. |
+| TikTok Ads (Business API) | `GET /oauth2/advertiser/get/` | Field reference per endpoint (`/campaign/get/`, `/adgroup/get/`, `/ad/get/`) | `advertiser_id` required on almost every call. Time zone and currency belong to the account. |
+| Google Ads | MCC and child accounts (`customers:listAccessibleCustomers`) | GAQL `SELECT ... FROM` with `GoogleAdsFieldService` | `login-customer-id` sets the MCC; IDs without dashes; money in micros. |
+| HubSpot | `GET /account-info/v3/details` | `GET /crm/v3/properties/{objectType}`, `GET /crm/v3/schemas`, pipelines at `GET /crm/v3/pipelines/{objectType}` | A property has a `name` (API) and a `label`. Pipeline stages have their own IDs. |
+| Salesforce | org from the session (`sf org display`) | `GET /services/data/vXX.X/sobjects/{Object}/describe` | Picklist values and record types per object; custom field API names end in `__c`. |
+| Kommo / amoCRM | account subdomain; `GET /api/v4/account` | `GET /api/v4/leads/pipelines` (pipelines and statuses), `GET /api/v4/{entity}/custom_fields` | Pipeline statuses have numeric IDs; custom fields have a `field_id` and an `enum_id` per option. |
+| ClickUp | `GET /team` (workspaces) | `GET /space/{id}`, `GET /list/{id}/field` (custom fields), statuses per list or space | Statuses and fields can vary per list. |
+| Notion | `GET /users/me`, `POST /search` | `GET /data_sources/{id}` on recent API versions (`GET /databases/{id}` on older ones): properties and select options | Select option and property IDs are stable; names are not. |
+| Airtable | `GET /v0/meta/bases` | `GET /v0/meta/bases/{baseId}/tables` (fields and choices) | Field IDs (`fld…`) survive renames; names don't. |
+| Shopify (Admin GraphQL) | the token's shop | GraphQL introspection; metafield definitions | IDs are GIDs (`gid://shopify/Product/...`). |
+| Stripe | the token's account; `GET /v1/account` | API reference; `expand[]` for relations | Amounts in minor units; test and live modes have different IDs. |
+| WhatsApp Cloud API | `GET /{business_id}/owned_whatsapp_business_accounts` | templates at `GET /{waba_id}/message_templates` | Messages outside the 24-hour window need an approved template. |
+| Slack | `auth.test` | `conversations.list`, `users.list` | API calls use channel and user IDs, not names. |
+| n8n | instance and project | `GET /api/v1/workflows`; credentials by the name and type seen in workflow nodes (the public API lists little about credentials) | Record workflow and credential IDs, never credential contents. |
+| Postgres / Supabase | project or database | `information_schema`, `pg_enum` | RLS changes what each key can see; record which role was used. |
 
-## Amostragem segura
+## Safe sampling
 
-- `limit` 1 a 3. Para entender um enum, use o endpoint de metadados, não centenas de registros.
-- Antes de colar uma resposta no mapa, apague ou substitua por placeholder: nomes, e-mails, telefones, documentos, endereços, URLs com token, conteúdo de mensagens.
-- Corte respostas longas: mantenha a estrutura (chaves e tipos) e um exemplo de cada lista.
+- `limit` of 1 to 3. To understand an enum, use the metadata endpoint, not hundreds of records.
+- Before pasting a response into the map, delete or replace with placeholders: names, emails, phones, ID documents, addresses, URLs with tokens, message contents.
+- Trim long responses: keep the structure (keys and types) and one example of each list.

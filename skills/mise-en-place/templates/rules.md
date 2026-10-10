@@ -1,39 +1,39 @@
-# <Ferramenta>: regras de uso
+# <Tool>: rules of use
 
-> Steering para qualquer sessão que opere <Ferramenta>. Atualizado em AAAA-MM-DD.
+> Steering for any session that operates <Tool>. Updated YYYY-MM-DD.
 
-## Antes de agir
+## Before acting
 
-- Leia [README.md](README.md) e confirme a conta com o usuário quando houver mais de uma.
-- <Outra pré-condição.>
+- Read [README.md](README.md) and confirm the account with the user when there is more than one.
+- <Another precondition.>
 
-## Segurança
+## Safety
 
-- <Crie sempre <pausado/rascunho>; ativar gasta dinheiro e exige confirmação explícita.>
-- <Mostre <conta, valor, público, link> e espere um sim antes de <operação irreversível>.>
-- Nunca grave credenciais em arquivo; use `$<FERRAMENTA>_TOKEN`.
+- <Always create <paused/draft>; activating spends money and needs explicit confirmation.>
+- <Show <account, amount, audience, link> and wait for a yes before <irreversible operation>.>
+- Never write credentials to a file; use `$<TOOL>_TOKEN`.
 
-## Limites e mecânica
+## Limits and mechanics
 
-- <Limite de taxa: <n> req/s; em 429 espere `Retry-After`.>
-- <Paginação por <cursor/offset>, máximo <n> por página.>
+- <Rate limit: <n> req/s; on 429 wait for `Retry-After`.>
+- <Pagination by <cursor/offset>, at most <n> per page.>
 
-## Formatos
+## Formats
 
-- <Valores em <centavos/micros> da moeda da conta.>
-- <Datas no fuso da conta.>
+- <Amounts in <cents/micros> of the account currency.>
+- <Dates in the account's time zone.>
 
-## Convenções da conta
+## Account conventions
 
-- <Padrão de nome: `<PADRÃO>`; exemplo: `<EXEMPLO ANONIMIZADO>`.>
+- <Naming pattern: `<PATTERN>`; example: `<ANONYMIZED EXAMPLE>`.>
 
-## Pare e pergunte quando
+## Stop and ask when
 
-- <Conta, funil ou objeto ambíguo.>
-- <A resposta da API não bater com o mapa (sugira atualizar o mapa).>
+- <The account, pipeline or object is ambiguous.>
+- <The API response doesn't match the map (suggest updating the map).>
 
-## Erros conhecidos
+## Known errors
 
-| Erro | Causa | Correção |
+| Error | Cause | Fix |
 | --- | --- | --- |
-| `<código>` | <causa> | <correção> |
+| `<code>` | <cause> | <fix> |

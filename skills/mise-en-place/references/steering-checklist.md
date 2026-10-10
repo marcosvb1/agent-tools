@@ -1,45 +1,45 @@
 # Steering checklist
 
-Roteiro para o `rules.md`. Passe por cada item e registre só o que se aplica à ferramenta. Cada regra numa linha, no imperativo, com o porquê quando ele não for óbvio.
+Checklist for `rules.md`. Go through each item and record only what applies to the tool. One rule per line, in the imperative, with the reason when it isn't obvious.
 
-## Segurança
+## Safety
 
-- Quais operações gastam dinheiro (ativar campanha, aumentar orçamento, enviar mensagem paga)?
-- Quais são irreversíveis (apagar, enviar e-mail ou WhatsApp, publicar, cobrar, arquivar sem restauração)?
-- Qual é o default seguro de criação (pausado, rascunho, privado, test mode)?
-- Existe dry-run, sandbox, modo test ou validação (`validate_only`, `dry_run`)? Como se usa?
-- O que exige confirmação explícita do usuário antes de executar? Escreva como gate: "mostre X, Y e Z e espere um sim".
+- Which operations spend money (activating a campaign, raising a budget, sending a paid message)?
+- Which are irreversible (deleting, sending an email or WhatsApp message, publishing, charging, archiving without restore)?
+- What is the safe default on creation (paused, draft, private, test mode)?
+- Is there a dry-run, sandbox, test mode or validation flag (`validate_only`, `dry_run`)? How is it used?
+- What needs the user's explicit confirmation before running? Write it as a gate: "show X, Y and Z and wait for a yes".
 
-## Limites e mecânica
+## Limits and mechanics
 
-- Limite de taxa e como a API sinaliza (status 429, cabeçalhos, códigos de erro próprios).
-- Paginação: tipo, tamanho máximo de página, como saber que acabou.
-- Lotes: quantos itens por chamada, se o lote é atômico ou parcial.
-- Tempo de propagação: o que demora para aparecer depois de criado (revisão de anúncio, indexação de busca).
-- Versão da API em uso e data de expiração conhecida.
+- Rate limit and how the API signals it (status 429, headers, its own error codes).
+- Pagination: type, maximum page size, how to know it's done.
+- Batches: how many items per call, whether a batch is atomic or partial.
+- Propagation delay: what takes time to show up after creation (ad review, search indexing).
+- API version in use and any known sunset date.
 
-## Formatos que enganam
+## Formats that mislead
 
-- Dinheiro: unidade (centavos, micros), moeda da conta.
-- Datas: fuso da conta versus UTC, formato (ISO, epoch em segundos ou milissegundos).
-- IDs: string ou número, prefixos (`act_`, `gid://`), IDs diferentes entre ambiente de teste e produção.
-- Enums: valores aceitos e diferença entre rótulo exibido e valor na API.
-- Campos que só aceitam escrita na criação, ou que a API ignora em silêncio.
+- Money: unit (cents, micros) and the account's currency.
+- Dates: account time zone versus UTC, format (ISO, epoch seconds or milliseconds).
+- IDs: string or number, prefixes (`act_`, `gid://`), different IDs between test and production.
+- Enums: accepted values and the difference between the label shown and the API value.
+- Fields that can only be written on creation, or that the API silently ignores.
 
-## Convenções da conta
+## Account conventions
 
-- Padrão de nomes (campanha, adset, lista, tarefa) com exemplo real anonimizado.
-- Numeração sequencial e onde conferir o próximo número.
-- Tags, pastas, responsáveis ou funis padrão.
-- Quem é dono de quê: conta que não deve ser mexida, objetos gerenciados por automação.
+- Naming pattern (campaign, ad set, list, task) with an anonymized real example.
+- Sequential numbering and where to check the next number.
+- Default tags, folders, owners or pipelines.
+- Who owns what: accounts that must not be touched, objects managed by automations.
 
-## Quando parar e perguntar
+## When to stop and ask
 
-- Conta, funil ou objeto ambíguo (mais de um candidato com o mesmo nome).
-- Operação fora das que o mapa cobre.
-- Resposta da API diferente do que o mapa diz (o mapa pode estar velho: sugira atualizar).
-- Pedido que esbarra numa regra de segurança acima.
+- Ambiguous account, pipeline or object (more than one candidate with the same name).
+- An operation the map doesn't cover.
+- An API response that doesn't match the map (the map may be stale: suggest updating it).
+- A request that runs into one of the safety rules above.
 
-## Erros conhecidos
+## Known errors
 
-Para cada erro visto durante o mapeamento: mensagem ou código, causa e correção. Esta seção cresce com o uso; diga ao usuário que vale acrescentar erros novos quando aparecerem.
+For each error seen while mapping: message or code, cause and fix. This section grows with use; tell the user it's worth adding new errors as they show up.

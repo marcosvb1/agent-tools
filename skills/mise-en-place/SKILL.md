@@ -1,100 +1,102 @@
 ---
 name: mise-en-place
-description: This skill should be used when the user wants to build, update or audit the reference map of a tool, API, connector or SaaS account — its access route, accounts, objects, properties, IDs, payloads and rules of use — saved as files Claude reads before operating it, e.g. "faz o mise en place do Kommo", "atualiza o mapa do ClickUp", "audita as references do Meta Ads", "monta as references dessa ferramenta", "mapeia as contas e objetos do HubSpot", "documenta os payloads que funcionam no TikTok", "map this API before we use it". Not for one-off questions about a tool ("quais campos tem no X", "qual o ID do funil Y": answer directly), not for the day-to-day operation itself (use the tool's own skill) and not for writing an MCP server.
+description: This skill should be used when the user wants to build, update or audit the reference map of a tool, API, connector or SaaS account — its access route, accounts, objects, properties, IDs, payloads and rules of use — saved as files Claude reads before operating it, e.g. "do the mise en place for HubSpot", "map this API before we use it", "build the references for this tool", "document the payloads that work in Stripe", "update the ClickUp map", "audit the Meta Ads references", "faz o mise en place do Kommo", "atualiza o mapa do ClickUp". Not for one-off questions about a tool ("which fields does X have", "what is the ID of pipeline Y": answer directly), not for the day-to-day operation itself (use the tool's own skill) and not for writing an MCP server.
 ---
 
 # Mise en place
 
-Antes de cozinhar, tudo no lugar: para cada ferramenta com que o Claude trabalha, um mapa curto e verificado de **como acessar**, **quais contas existem**, **quais objetos e propriedades importam**, **quais payloads funcionam** e **quais regras seguir**. Sessões futuras (e a skill operacional da ferramenta) leem o mapa antes de agir, em vez de redescobrir tudo ou chutar IDs e nomes de campo.
+Everything in its place before cooking: for each tool Claude works with, a short, verified map of **how to access it**, **which accounts exist**, **which objects and properties matter**, **which payloads work** and **which rules to follow**. Future sessions (and the tool's own operational skill) read the map before acting, instead of rediscovering everything or guessing IDs and field names.
 
-O mapa vale pelo que foi **verificado**. Cada fato registra de onde veio e quando: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
+A map is worth what was **verified**. Every fact records where it came from and when: `verified YYYY-MM-DD`, `docs` or `inferred`.
 
-## Resultado
+Write the map in the user's language. Keep API names, field names and IDs exactly as the tool returns them.
 
-Uma pasta por ferramenta, dentro da pasta de references do usuário:
+## Output
+
+One folder per tool, inside the user's references folder:
 
 ```
-<destino>/<ferramenta>/
-  README.md           # o mapa: frontmatter, "Use quando", acesso, contas, objetos, operações
-  rules.md            # steering: regras, limites, armadilhas, o que pede confirmação
-  objects/<objeto>.md # propriedades, tipos, enums, IDs, relações
-  payloads/<op>.md    # request e response verificados de cada operação comum
-  data.example.json   # forma dos IDs e da config, com placeholders e _validated_at
-  data.local.json     # os IDs reais nessa forma; fica fora do git
+<destination>/<tool>/
+  README.md           # the map: frontmatter, "Use when", access, accounts, objects, operations
+  rules.md            # steering: rules, limits, pitfalls, what needs confirmation
+  objects/<object>.md # properties, types, enums, IDs, relations
+  payloads/<op>.md    # verified request and response for each common operation
+  data.example.json   # shape of the IDs and config, with placeholders and _validated_at
+  data.local.json     # the real IDs in that shape; kept out of git
 ```
 
-- O `README.md` abre com um frontmatter fixo (`tool`, `route`, `default_account`, `validated_at` em ISO), para que um hook ou outra skill consiga ler a conta padrão e a idade do mapa.
-- Ferramenta pequena cabe toda no `README.md`, com as regras numa seção `## Regras`. Assuntos que crescem viram arquivos soltos, como `gotcha-<assunto>.md`. Não crie arquivos vazios.
-- Se o destino já tiver pastas de outras ferramentas, **siga a convenção de lá**: o mapa novo deve parecer irmão dos que já existem.
+- `README.md` starts with a fixed frontmatter (`tool`, `route`, `default_account`, `validated_at` in ISO format), so a hook or another skill can read the default account and the map's age.
+- A small tool fits entirely in `README.md`, with the rules in a `## Rules` section. Topics that grow become loose files such as `gotcha-<topic>.md`. Don't create empty files.
+- If the destination already holds folders for other tools, **follow the convention found there**: the new map should look like a sibling of the existing ones.
 
-Modelos em `templates/`. O detalhe dos passos 3 a 7 está em `references/passos-detalhados.md`.
+Templates live in `templates/`. Details for steps 3 to 7 are in `references/step-details.md`.
 
-## Fluxo
+## Workflow
 
-### 1. Escopo
+### 1. Scope
 
-Descubra sozinho o que der e pergunte no máximo duas coisas, numa mensagem só:
+Find out what you can on your own and ask at most two things, in a single message:
 
-- **Ferramenta e objetivo** (para que o mapa vai servir: "subir anúncios", "mover leads no funil"). Costuma vir no pedido; o objetivo decide o que é detalhado e o que só é listado.
-- **Destino**. Procure antes de perguntar, nesta ordem: um mapa que já exista da ferramenta (vira atualização, veja abaixo), a pasta `references/` da skill da ferramenta, a pasta de references do vault ou projeto (`docs/references/`, `references/`, `refs/`), e por fim `./.claude/mise-en-place/<ferramenta>/`. Só pergunte se houver mais de um candidato.
-- **Visibilidade**. Se o destino estiver num repo git, veja o remote (`git remote -v`; `gh repo view --json visibility` quando houver `gh`). Sem como confirmar, trate como **público** e avise; o usuário pode dizer que é privado.
+- **Tool and goal** (what the map is for: "launch ads", "move leads through the pipeline"). Usually already in the request; the goal decides what gets detailed and what is only listed.
+- **Destination**. Search before asking, in this order: an existing map for the tool (this becomes an update, see below), the `references/` folder of the tool's skill, the references folder of the user's vault or project (`docs/references/`, `references/`, `refs/`), and finally `./.claude/mise-en-place/<tool>/`. Ask only if there is more than one candidate.
+- **Visibility**. If the destination is in a git repo, check the remote (`git remote -v`; `gh repo view --json visibility` when `gh` is available). If you can't confirm it, treat it as **public** and say so; the user can tell you it's private.
 
-Contas não se perguntam aqui: o passo 3 lista as que o acesso enxerga.
+Don't ask about accounts here: step 3 lists the ones the access route can see.
 
-### 2. Rota de acesso
+### 2. Access route
 
-Descubra como a sessão fala com a ferramenta, nesta ordem, e registre a escolhida no `README.md`:
+Find out how the session talks to the tool, in this order, and record the chosen route in `README.md`:
 
-1. **Conector MCP** na sessão (procure com `ToolSearch` pelo nome da ferramenta, ou na lista de tools onde `ToolSearch` não existir). Preferido: não precisa de token.
-2. **CLI** instalada e logada (`gh`, `gcloud`, `stripe`, `supabase`…).
-3. **API HTTP** com credencial em variável de ambiente. Registre só o **nome** da variável.
-4. **Documentação** (Context7, docs oficiais) quando não houver acesso: tudo sai marcado `docs`.
+1. **MCP connector** in the session (search with `ToolSearch` for the tool's name, or check the session's tool list where `ToolSearch` doesn't exist). Preferred: no token needed.
+2. **CLI** installed and logged in (`gh`, `gcloud`, `stripe`, `supabase`…).
+3. **HTTP API** with a credential in an environment variable. Record only the variable's **name**.
+4. **Documentation** (Context7, official docs) when there is no access: everything is marked `docs`.
 
-Sem rota nenhuma, diga qual conector ou variável faltaria e ofereça seguir só com a documentação. Táticas por rota e endpoints de schema de ferramentas comuns: `references/discovery-playbook.md`.
+With no route at all, say which connector or variable is missing and offer to continue from the documentation only. Tactics per route and schema endpoints of common tools: `references/discovery-playbook.md`.
 
-### 3. Contas
+### 3. Accounts
 
-Liste com leituras as contas, workspaces ou projetos visíveis e confirme com o usuário quais são de uso real e qual é a padrão.
+List the visible accounts, workspaces or projects with read calls, and confirm with the user which ones are actually used and which is the default.
 
-### 4. Objetos e propriedades
+### 4. Objects and properties
 
-Schema pelo endpoint de metadados, não por amostras; propriedades com nome na API, tipo e IDs de enum; relações entre objetos. Detalhe em `references/passos-detalhados.md`.
+Schema from the metadata endpoint, not from samples; properties with API name, type and enum IDs; relations between objects. Details in `references/step-details.md`.
 
 ### 5. Payloads
 
-Request e response que funcionaram para cada operação comum, e os erros vistos com a correção. Leituras rodam de verdade; escritas só por dry-run, por uma escrita que o usuário já pediu, ou por uma escrita de teste reversível que ele aprove. Nada que gaste dinheiro, envie mensagem ou apague dado real.
+Request and response that worked for each common operation, plus the errors seen and how they were fixed. Reads run for real; writes only through a dry-run, a write the user already asked for, or a reversible test write they approve. Nothing that spends money, messages third parties or deletes real data.
 
-### 6. Redação e segredos
+### 6. Redaction and secrets
 
-Nenhuma credencial nos `.md` nem no `data.example.json`; dados pessoais viram placeholders; em repo público os IDs reais vão só para o `data.local.json`. Antes de entregar, rode:
+No credentials in the `.md` files or in `data.example.json`; personal data becomes placeholders; in a public repo the real IDs go only into `data.local.json`. Before handing over, run:
 
 ```bash
-python3 <pasta-da-skill>/scripts/check_secrets.py [--public] <destino>/<ferramenta>
+python3 <skill-folder>/scripts/check_secrets.py [--public] <destination>/<tool>
 ```
 
-Use `--public` quando o destino for repo público. Corrija o que ele apontar ou justifique o falso positivo. Opções e o que fazer sem Python: `references/passos-detalhados.md`.
+Use `--public` when the destination is a public repo. Fix whatever it flags or explain the false positive to the user. Options, and what to do without Python: `references/step-details.md`.
 
 ### 7. Steering (`rules.md`)
 
-As regras que uma sessão futura precisa seguir para não errar, uma por linha, com o porquê quando não for óbvio. Roteiro: `references/steering-checklist.md`.
+The rules a future session must follow to avoid mistakes, one per line, with the reason when it isn't obvious. Checklist: `references/steering-checklist.md`.
 
-### 8. Ligar o mapa ao trabalho
+### 8. Wire the map into the work
 
-O mapa só ajuda se for lido. Ofereça, conforme o caso: uma linha no `SKILL.md` da skill da ferramenta ("antes de operar, leia `<destino>/<ferramenta>/README.md`"); uma linha no índice da pasta de references, no registro de ferramentas conectadas (ex.: `connections.md`) ou no `CLAUDE.md`; ou, se o uso for recorrente e não houver skill da ferramenta, criar uma com `skill-creator`.
+A map only helps if it gets read. Offer, as fits: a line in the tool skill's `SKILL.md` ("before operating, read `<destination>/<tool>/README.md`"); a line in the references folder's index, in the registry of connected tools (e.g. `connections.md`) or in `CLAUDE.md`; or, if the tool is used often and has no skill, creating one with `skill-creator`.
 
-Feche com um resumo curto: rota, contas, objetos e operações cobertos, o que ficou como `docs` e o que a checagem encontrou.
+Close with a short summary: route, accounts, objects and operations covered, what stayed as `docs`, and what the secrets check found.
 
-## Atualizar ou auditar um mapa
+## Updating or auditing a map
 
-1. Leia o `README.md` do mapa: `validated_at` no frontmatter e a coluna `Origem` de cada linha.
-2. Repita os passos 3 a 5 só em leitura e compare: contas novas ou removidas, propriedades e enums que mudaram, IDs que sumiram, linhas `docs` que agora dá para verificar.
-3. Mostre as diferenças antes de reescrever.
-4. Atualize o `rules.md` com o que mudou e rode a checagem de segredos de novo.
-5. Atualize `validated_at` (no `README.md` e no `data.example.json`) e registre a mudança na seção "Histórico".
+1. Read the map's `README.md`: `validated_at` in the frontmatter and the `Source` column of each row.
+2. Repeat steps 3 to 5 with reads only and compare: new or removed accounts, changed properties and enums, IDs that no longer exist, `docs` rows that can now be verified.
+3. Show the differences before rewriting.
+4. Update `rules.md` with what changed and run the secrets check again.
+5. Update `validated_at` (in `README.md` and in `data.example.json`) and log the change in the "History" section.
 
-## Princípios
+## Principles
 
-- **Curto e navegável.** O `README.md` do mapa é lido inteiro em toda sessão: abaixo de ~200 linhas, com o detalhe em `objects/` e `payloads/`.
-- **Verificado vence completo.** Dez propriedades confirmadas valem mais que duzentas copiadas da documentação.
-- **IDs em tabela.** "ID do estágio Qualificado" tem que ser achado num olhar.
-- **Só leitura por padrão.** Mapear não é operar.
+- **Short and navigable.** The map's `README.md` is read in full every session: keep it under ~200 lines and push detail into `objects/` and `payloads/`.
+- **Verified beats complete.** Ten confirmed properties are worth more than two hundred copied from the docs.
+- **IDs in tables.** "ID of the Qualified stage" must be findable at a glance.
+- **Read-only by default.** Mapping is not operating.

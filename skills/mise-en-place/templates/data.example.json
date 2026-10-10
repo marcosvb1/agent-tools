@@ -1,27 +1,35 @@
 {
-  "base_url": "https://api.<ferramenta>.com/v1",
+  "base_url": "https://api.<tool>.com/v1",
   "auth": {
-    "env_var": "<FERRAMENTA>_TOKEN",
-    "header": "Authorization: Bearer $<FERRAMENTA>_TOKEN"
+    "env_var": "<TOOL>_TOKEN",
+    "header": "Authorization: Bearer $<TOOL>_TOKEN"
   },
   "default_account": "<slug>",
   "accounts": {
     "<slug>": {
       "account_id": "<ACCOUNT_ID>",
       "name": "",
-      "currency": "BRL",
-      "timezone": "America/Sao_Paulo",
+      "currency": "USD",
+      "timezone": "America/New_York",
       "pipelines": {
         "<pipeline_id>": {
           "name": "",
-          "stages": { "<stage_id>": "<nome do estágio>" }
+          "stages": {
+            "<stage_id>": "<stage name>"
+          }
         }
       },
       "custom_fields": {
-        "<field_id>": { "name": "", "type": "enum", "options": { "<enum_id>": "<rótulo>" } }
+        "<field_id>": {
+          "name": "",
+          "type": "enum",
+          "options": {
+            "<enum_id>": "<label>"
+          }
+        }
       }
     }
   },
-  "_validated_at": "AAAA-MM-DD",
-  "_notes": "Copie para data.local.json (fora do git) e preencha com os IDs reais. Nunca coloque o token aqui; ele fica na variável de ambiente indicada em auth.env_var."
+  "_validated_at": "YYYY-MM-DD",
+  "_notes": "Copy to data.local.json (outside git) and fill in the real IDs. Never put the token here; it lives in the environment variable named in auth.env_var."
 }

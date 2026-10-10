@@ -1,58 +1,58 @@
 ---
-tool: <ferramenta>
-route: <mcp:<conector> | cli:<cli> | api | docs>
-default_account: <slug da conta padrão, igual à chave em data.local.json>
-validated_at: AAAA-MM-DD
+tool: <tool>
+route: <mcp:<connector> | cli:<cli> | api | docs>
+default_account: <slug of the default account, same as its key in data.local.json>
+validated_at: YYYY-MM-DD
 ---
 
-# <Ferramenta>: <o que se faz com ela>
+# <Tool>: <what it's used for>
 
-Use quando: <situações em que este mapa deve ser lido, nas palavras do usuário (ex.: "mover lead de etapa", "subir anúncio na conta X")>. Skill operacional: <`.claude/skills/<ferramenta>-ops/`, se houver>.
+Use when: <situations in which this map should be read, in the user's words (e.g. "move a lead to another stage", "launch an ad on account X")>. Operational skill: <`.claude/skills/<tool>-ops/`, if any>.
 
-> Leia antes de operar. Regras em [rules.md](rules.md) (ferramenta pequena: troque o link por uma seção `## Regras` neste arquivo). IDs e config em `data.local.json` (forma em [data.example.json](data.example.json)).
-> Origem dos fatos: `verificado AAAA-MM-DD`, `docs` ou `inferido`.
+> Read before operating. Rules in [rules.md](rules.md) (small tool: replace the link with a `## Rules` section in this file). IDs and config in `data.local.json` (shape in [data.example.json](data.example.json)).
+> Source of each fact: `verified YYYY-MM-DD`, `docs` or `inferred`.
 
-## Para que serve
+## Purpose
 
-<Uma ou duas frases: o que o usuário faz com esta ferramenta e qual objetivo guiou este mapa.>
+<One or two sentences: what the user does with this tool and which goal guided this map.>
 
-## Acesso
+## Access
 
-| Item | Valor | Origem |
+| Item | Value | Source |
 | --- | --- | --- |
-| Rota | <conector MCP "<nome>" / CLI `<cli>` / API HTTP / só docs> | verificado AAAA-MM-DD |
-| URL base e versão | `<https://api.exemplo.com/v1>` | |
-| Credencial | variável `$<FERRAMENTA>_TOKEN` (nunca o valor) | |
-| Como escolher a conta | <parâmetro, perfil, variável `$<FERRAMENTA>_ACCOUNT_<PERFIL>`> | |
+| Route | <MCP connector "<name>" / CLI `<cli>` / HTTP API / docs only> | verified YYYY-MM-DD |
+| Base URL and version | `<https://api.example.com/v1>` | |
+| Credential | variable `$<TOOL>_TOKEN` (never the value) | |
+| How to pick the account | <parameter, profile, variable `$<TOOL>_ACCOUNT_<PROFILE>`> | |
 
-## Contas
+## Accounts
 
-| Nome | ID | Uso | Moeda / fuso | Padrão |
+| Name | ID | Use | Currency / time zone | Default |
 | --- | --- | --- | --- | --- |
-| <conta-a> | `<ACCOUNT_ID>` | <para que serve> | <BRL / America/Sao_Paulo> | sim |
+| <account-a> | `<ACCOUNT_ID>` | <what it's for> | <USD / America/New_York> | yes |
 
-<Em repo público ou compartilhado, troque os IDs por placeholders; os reais ficam em `data.local.json`, fora do git.>
+<In a public or shared repo, replace the IDs with placeholders; the real ones live in `data.local.json`, outside git.>
 
-## Objetos
+## Objects
 
-| Objeto | Para que serve | Detalhe | Origem |
+| Object | What it's for | Details | Source |
 | --- | --- | --- | --- |
-| <lead> | <oportunidade no funil> | [objects/lead.md](objects/lead.md) | verificado AAAA-MM-DD |
-| <tarefa> | <fora do objetivo; só listado> | — | docs |
+| <lead> | <opportunity in the pipeline> | [objects/lead.md](objects/lead.md) | verified YYYY-MM-DD |
+| <task> | <out of scope; listed only> | — | docs |
 
-Relações: <campanha → adset → anúncio> / <lead → contato → empresa>.
+Relations: <campaign → ad set → ad> / <lead → contact → company>.
 
-## Operações
+## Operations
 
-| Quero… | Como (tool, comando ou endpoint) | Payload | Origem |
+| I want to… | How (tool, command or endpoint) | Payload | Source |
 | --- | --- | --- | --- |
-| <listar leads de um funil> | `<GET /leads?filter[pipeline_id]=<ID>>` | [payloads/listar-leads.md](payloads/listar-leads.md) | verificado AAAA-MM-DD |
-| <criar lead> | `<POST /leads>` | [payloads/criar-lead.md](payloads/criar-lead.md) | docs |
+| <list the leads in a pipeline> | `<GET /leads?filter[pipeline_id]=<ID>>` | [payloads/list-leads.md](payloads/list-leads.md) | verified YYYY-MM-DD |
+| <create a lead> | `<POST /leads>` | [payloads/create-lead.md](payloads/create-lead.md) | docs |
 
-## Pendências
+## Open items
 
-- <O que ficou como `docs` e precisa ser verificado quando houver acesso.>
+- <What stayed as `docs` and must be verified once there is access.>
 
-## Histórico
+## History
 
-- AAAA-MM-DD: mapa criado (<rota>, <n> contas, <n> objetos).
+- YYYY-MM-DD: map created (<route>, <n> accounts, <n> objects).

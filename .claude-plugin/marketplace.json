@@ -25,14 +25,15 @@
       "name": "mise-en-place",
       "source": "./",
       "strict": false,
-      "description": "Mapeia uma ferramenta (contas, objetos, propriedades, IDs, payloads e regras de uso) em references verificadas para o Claude trabalhar com ela sem chutar.",
+      "description": "Map any tool, API or connector (access route, accounts, objects, properties, IDs, payloads and rules of use) into verified reference files Claude reads before operating it.",
       "version": "0.1.0",
       "category": "productivity",
       "keywords": [
         "references",
-        "mapeamento",
+        "tool-mapping",
         "api",
-        "steering"
+        "steering",
+        "onboarding"
       ],
       "skills": [
         "./skills/mise-en-place"

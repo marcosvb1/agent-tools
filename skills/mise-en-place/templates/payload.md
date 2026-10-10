@@ -1,26 +1,26 @@
-# <Operação> (<Ferramenta>)
+# <Operation> (<Tool>)
 
-> <verificado AAAA-MM-DD | docs | inferido>. Conta: `<conta-a>`.
+> <verified YYYY-MM-DD | docs | inferred>. Account: `<account-a>`.
 
-## Quando usar
+## When to use
 
-<Uma frase.>
+<One sentence.>
 
 ## Request
 
-`<MÉTODO> <caminho ou nome da tool>`
+`<METHOD> <path or tool name>`
 
 ```json
 {
-  "<campo>": "<valor ou placeholder>"
+  "<field>": "<value or placeholder>"
 }
 ```
 
-Parâmetros que importam:
+Parameters that matter:
 
-- `<campo>`: <o que faz, valores aceitos, armadilha>.
+- `<field>`: <what it does, accepted values, pitfall>.
 
-## Response (trecho)
+## Response (excerpt)
 
 ```json
 {
@@ -28,8 +28,8 @@ Parâmetros que importam:
 }
 ```
 
-## Erros vistos
+## Errors seen
 
-| Erro | Causa | Correção |
+| Error | Cause | Fix |
 | --- | --- | --- |
-| `<código ou mensagem>` | <causa> | <o que resolveu> |
+| `<code or message>` | <cause> | <what fixed it> |

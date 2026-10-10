@@ -1,41 +1,41 @@
-# <Objeto> (<Ferramenta>)
+# <Object> (<Tool>)
 
-> Atualizado em AAAA-MM-DD. Schema lido de `<endpoint ou tool de metadados>`.
+> Updated YYYY-MM-DD. Schema read from `<metadata endpoint or tool>`.
 
-<Uma frase: o que é este objeto no negócio do usuário.>
+<One sentence: what this object is in the user's business.>
 
-## Propriedades
+## Properties
 
-| Nome na API | Rótulo | Tipo | Obrig. | Só leitura | Notas | Origem |
+| API name | Label | Type | Required | Read-only | Notes | Source |
 | --- | --- | --- | --- | --- | --- | --- |
-| `<name>` | <Nome> | string | sim | não | | verificado AAAA-MM-DD |
-| `<price>` | <Valor> | integer | não | não | centavos | docs |
-| `<custom_field_123>` | <Origem do lead> | enum | não | não | opções abaixo | verificado AAAA-MM-DD |
+| `<name>` | <Name> | string | yes | no | | verified YYYY-MM-DD |
+| `<price>` | <Value> | integer | no | no | cents | docs |
+| `<custom_field_123>` | <Lead source> | enum | no | no | options below | verified YYYY-MM-DD |
 
-## Opções de enum
+## Enum options
 
-### `<custom_field_123>` — <Origem do lead>
+### `<custom_field_123>` — <Lead source>
 
-| Rótulo | ID / valor |
+| Label | ID / value |
 | --- | --- |
 | <Instagram> | `<ENUM_ID>` |
 
-## Estágios / status
+## Stages / statuses
 
-| Funil / grupo | Estágio | ID |
+| Pipeline / group | Stage | ID |
 | --- | --- | --- |
-| <Vendas> | <Qualificado> | `<STATUS_ID>` |
+| <Sales> | <Qualified> | `<STATUS_ID>` |
 
-## Relações
+## Relations
 
-- <Pertence a> `<outro objeto>` via `<campo>`.
-- <Tem muitos> `<outro objeto>`; buscar com `<endpoint ou tool>`.
+- <Belongs to> `<other object>` via `<field>`.
+- <Has many> `<other object>`; fetch with `<endpoint or tool>`.
 
-## Exemplo (anonimizado)
+## Example (anonymized)
 
 ```json
 {
   "id": "<ID>",
-  "name": "<NOME>"
+  "name": "<NAME>"
 }
 ```

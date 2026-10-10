@@ -1,17 +1,17 @@
 #!/usr/bin/env python3
-"""Procura segredos e dados pessoais num mapa gerado pela skill mise-en-place.
+"""Scan a map written by the mise-en-place skill for secrets and personal data.
 
-Uso: python3 check_secrets.py [--public] [--include-local] <pasta-ou-arquivo> [...]
-     python3 check_secrets.py --self-test
+Usage: python3 check_secrets.py [--public] [--include-local] <folder-or-file> [...]
+       python3 check_secrets.py --self-test
 
---public         também acusa IDs reais (act_123..., gid://..., números de 15+
-                 dígitos) nos arquivos que vão para um repo público.
---include-local  varre também *.local.json e *.local.md, que por convenção
-                 guardam os IDs reais e ficam fora do git (pulados por padrão).
+--public         also flag real IDs (act_123..., gid://..., numbers with 15+
+                 digits) in files that will live in a public repo.
+--include-local  also scan *.local.json and *.local.md, which by convention
+                 hold the real IDs and stay out of git (skipped by default).
 
-Sai com código 1 se encontrar algo. Placeholders como <TOKEN>, $VAR e
-exemplos com "example" são ignorados. Nomes e endereços não têm padrão
-confiável: revise-os à mão.
+Exits with code 1 if anything is found. Placeholders such as <TOKEN>, $VAR
+and values containing "example" are ignored. Names and addresses have no
+reliable pattern: review them by hand.
 """
 
 import math
@@ -51,7 +51,7 @@ PATTERNS = [
     ("CNPJ", re.compile(r"\b\d{2}\.\d{3}\.\d{3}/\d{4}-\d{2}\b")),
 ]
 
-# Só dígitos colidem com IDs numéricos; por isso só contam com um rótulo na linha.
+# Digits-only values collide with numeric IDs, so they only count when the line has a label.
 LABELED = [
     ("Phone number (digits)", re.compile(r"(?:tel|fone|phone|celular|whats|contato)", re.I),
      re.compile(r"\b(?:55)?\d{2}9?\d{8}\b")),
@@ -163,11 +163,11 @@ def self_test():
         got = bool(scan_line(line))
         if got != expected:
             failed += 1
-            print(f"FALHOU: esperado {'alerta' if expected else 'limpo'}: {line}")
+            print(f"FAILED: expected {'a finding' if expected else 'clean'}: {line}")
     if not scan_line("ad account act_1234567890", public=True):
         failed += 1
-        print("FALHOU: --public deveria acusar act_1234567890")
-    print("self-test ok" if not failed else f"{failed} caso(s) falharam")
+        print("FAILED: --public should flag act_1234567890")
+    print("self-test ok" if not failed else f"{failed} case(s) failed")
     return 1 if failed else 0
 
 
@@ -191,9 +191,9 @@ def main(argv):
                 found += 1
                 print(f"{f}:{n}: {label}: {redact(text)}")
     if found:
-        print(f"\n{found} ocorrência(s). Troque por placeholder ou variável de ambiente, ou justifique o falso positivo.")
+        print(f"\n{found} finding(s). Replace them with a placeholder or an environment variable, or explain the false positive.")
         return 1
-    print("Nada encontrado.")
+    print("Nothing found.")
     return 0
 
 
