@@ -25,7 +25,7 @@
       "name": "mise-en-place",
       "source": "./",
       "strict": false,
-      "description": "Map any tool, API or connector (access route, accounts, objects, properties, IDs, payloads and rules of use) into verified reference files Claude reads before operating it.",
+      "description": "Prepare the workspace so Claude can operate real apps: a verified map of your account (accounts, IDs, fields, conventions, payloads, rules) that Claude reads before acting, instead of learning by trial and error mid-task.",
       "version": "0.1.0",
       "category": "productivity",
       "keywords": [

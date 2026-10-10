@@ -15,7 +15,7 @@ Ele funciona como um marketplace de plugins do Claude Code.
 | Nome | Tipo | O que faz |
 | --- | --- | --- |
 | `ads-ops` | plugin | Operação de Meta Ads e TikTok Ads com dry-run e criação pausada. |
-| `mise-en-place` | skill | Mapeia uma ferramenta (contas, objetos, propriedades, IDs, payloads e regras de uso) em references verificadas. |
+| `mise-en-place` | skill | Prepara o workspace para o Claude operar apps de verdade: um mapa verificado da sua conta (IDs, campos, convenções, payloads, regras). |
 
 ## Instalação
 

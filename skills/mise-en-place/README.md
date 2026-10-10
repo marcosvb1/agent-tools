@@ -1,14 +1,16 @@
 # mise-en-place
 
-**Claude learns your account in a tool once (IDs, fields, conventions, gotchas) and stops guessing.**
+**Prepare the workspace so your agent can cook in ops, not just write markdown.**
 
-*Mise en place* is the kitchen habit of having everything in its place before cooking. This skill does that for the tools Claude operates: before working in your CRM, ads account, billing or project tracker, it builds a short, verified map of *your* account and reads it every time after.
+*Mise en place* is the kitchen habit of having everything in its place before cooking. Agents are great at producing documents, pages and code. Ask one to *operate* a real app, though, and it stalls, and many people don't understand why. The reason is that every app is full of specifics: every HubSpot portal has its own properties with their own types, every CRM its own pipelines and stage IDs, every ads account its own naming rules and money units. Without them, the agent navigates with a lot of uncertainty and learns your account by trial and error in the middle of the job.
+
+This skill does the prep first. Before Claude works in your CRM, ads account, billing or project tracker, it builds a short, verified map of *your* account and reads it every time after.
 
 ## Before and after
 
-**Before.** "Move this deal to Qualified." Claude lists pipelines, guesses which one you mean, searches for a stage called "Qualified", picks the wrong one in the second pipeline, and sends a field name the API silently ignores. Next session, it starts from zero again.
+**Before.** "Build an automation in HubSpot that routes inbound leads by country and lead source." Claude doesn't know your portal: it guesses that the source lives in `hs_analytics_source` when your team uses a custom `lead_origin` dropdown, sends `"Instagram"` where the property expects the option's internal value, picks a pipeline stage by its label, and discovers each mistake one failed call at a time, while it is building the flow. Next session, it starts from zero again.
 
-**After.** Claude reads `references/hubspot/README.md`, sees that the default pipeline is `Sales`, that "Qualified" is stage `<STAGE_ID>`, that the team names deals `Company / Product / Quarter`, and that moving a deal to Closed Won needs your confirmation because it triggers invoicing. It makes one correct call.
+**After.** Claude reads `references/hubspot/README.md` first. It already knows that `lead_origin` is an enumeration with internal values like `paid_social`, that country is the default `country` property, that "Qualified" in the Sales pipeline is stage `<STAGE_ID>`, that workflows are named `[Team] Trigger → Action`, and that anything sending email to contacts needs your yes first. It builds the automation right the first time.
 
 ## What it records
 
