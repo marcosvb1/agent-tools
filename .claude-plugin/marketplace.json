@@ -5,7 +5,7 @@
     "name": "marcosvb1"
   },
   "metadata": {
-    "description": "Skills, plugins e mods do Claude desenvolvidos em marcosvb1/agent-tools.",
+    "description": "Claude skills, plugins and mods developed in marcosvb1/agent-tools.",
     "version": "0.1.0"
   },
   "plugins": [
@@ -19,6 +19,24 @@
         "meta-ads",
         "tiktok-ads",
         "midia-paga"
+      ]
+    },
+    {
+      "name": "mise-en-place",
+      "source": "./",
+      "strict": false,
+      "description": "Prepare the workspace so Claude can operate real apps: a verified map of your account (accounts, IDs, fields, conventions, payloads, rules) that Claude reads before acting, instead of learning by trial and error mid-task.",
+      "version": "0.1.0",
+      "category": "productivity",
+      "keywords": [
+        "references",
+        "tool-mapping",
+        "api",
+        "steering",
+        "onboarding"
+      ],
+      "skills": [
+        "./skills/mise-en-place"
       ]
     }
   ]
