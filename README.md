@@ -1,29 +1,29 @@
 # agent-tools
 
-Este repositório é dedicado ao desenvolvimento de skills e plugins para o Claude em geral: ferramentas, fluxos e extensões reutilizáveis que ampliam o que o Claude consegue fazer em diferentes projetos.
+Skills, plugins and mods for Claude: reusable tools, workflows and extensions that expand what Claude can do across projects.
 
-Ele funciona como um marketplace de plugins do Claude Code.
+This repo works as a Claude Code plugin marketplace.
 
-## Estrutura
+## Layout
 
-- `.claude-plugin/marketplace.json`: catálogo do marketplace. Todo plugin, mod ou pacote de skills precisa estar listado aqui.
-- `plugins/`: plugins e mods, uma pasta por plugin (veja [plugins/README.md](plugins/README.md)).
-- `skills/`: skills avulsas, uma pasta por skill (veja [skills/README.md](skills/README.md)).
+- `.claude-plugin/marketplace.json`: the marketplace catalog. Every plugin, mod or skill bundle must be listed here.
+- `plugins/`: plugins and mods, one folder per plugin (see [plugins/README.md](plugins/README.md)).
+- `skills/`: standalone skills, one folder per skill (see [skills/README.md](skills/README.md)).
 
-## Conteúdo
+## Contents
 
-| Nome | Tipo | O que faz |
+| Name | Type | What it does |
 | --- | --- | --- |
-| `ads-ops` | plugin | Operação de Meta Ads e TikTok Ads com dry-run e criação pausada. |
-| `mise-en-place` | skill | Prepara o workspace para o Claude operar apps de verdade: um mapa verificado da sua conta (IDs, campos, convenções, payloads, regras). |
+| `ads-ops` | plugin | Meta Ads and TikTok Ads operations with dry-run and paused creation. |
+| [`mise-en-place`](skills/mise-en-place/README.md) | skill | Prepares the workspace so Claude can operate real apps: a verified map of your account (IDs, fields, conventions, payloads, rules). |
 
-## Instalação
+## Install
 
 ```bash
 /plugin marketplace add marcosvb1/agent-tools
 /plugin install <plugin>@agent-tools
 ```
 
-Exemplo: `/plugin install mise-en-place@agent-tools`.
+Example: `/plugin install mise-en-place@agent-tools`.
 
-Por projeto: `claude plugin install <plugin>@agent-tools --scope project`.
+Per project: `claude plugin install <plugin>@agent-tools --scope project`.

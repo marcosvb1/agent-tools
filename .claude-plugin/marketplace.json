@@ -5,7 +5,7 @@
     "name": "marcosvb1"
   },
   "metadata": {
-    "description": "Skills, plugins e mods do Claude desenvolvidos em marcosvb1/agent-tools.",
+    "description": "Claude skills, plugins and mods developed in marcosvb1/agent-tools.",
     "version": "0.1.0"
   },
   "plugins": [
